@@ -6,7 +6,9 @@ import { COMMON_MESSAGE } from '~/constant/messages'
 import {
   ConsultancyAppointmentsQuery,
   ConsultancyAppointmentsRequest,
+  RequestAppointmentsCalendarRequest,
   RequestAppointmentsRequest,
+  RequestTattooAppointmentsByIdQuery,
   SessionAppointmentsQuery,
   SessionAppointmentsRequest,
   TattooAppointmentsQuery,
@@ -25,6 +27,18 @@ export const getRequestAppointmentsController = async (
     result
   })
 }
+
+export const getRequestAppointmentsCalendarController = async (
+  req: Request<ParamsDictionary, any, RequestAppointmentsCalendarRequest>,
+  res: Response
+) => {
+  const result = await appointmentsService.getRequestAppointmentsCalendar(req.query)
+  return res.send({
+    message: COMMON_MESSAGE.GET_SUCCESSFULLY,
+    result
+  })
+}
+
 export const getRequestAppointmentByIDController = async (
   req: Request<ParamsDictionary, any, RequestByID>,
   res: Response
@@ -138,7 +152,6 @@ export const getTattooAppointmentsController = async (
 ) => {
   const user_id = req?.decode_authorization?.user_id
   const role = req?.decode_authorization?.role
-
   const result = await appointmentsService.getTattooAppointments(req.query, {
     user_id,
     role
@@ -149,10 +162,19 @@ export const getTattooAppointmentsController = async (
   })
 }
 export const getTattooAppointmentByIDController = async (
-  req: Request<ParamsDictionary, any, RequestByID>,
+  req: Request<ParamsDictionary, any, RequestTattooAppointmentsByIdQuery>,
   res: Response
 ) => {
-  const result = await appointmentsService.getTattooAppointments({ _id: new ObjectId(req.params?.id) })
+  const user_id = req?.decode_authorization?.user_id
+  const role = req?.decode_authorization?.role
+
+  const result = await appointmentsService.getTattooAppointmentsByIdHour({
+    filters: req.body,
+    payload: {
+      user_id,
+      role
+    }
+  })
   return res.send({
     message: COMMON_MESSAGE.GET_SUCCESSFULLY,
     result

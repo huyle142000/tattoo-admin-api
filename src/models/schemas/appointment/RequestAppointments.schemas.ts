@@ -11,18 +11,22 @@ interface RequestAppointmentType {
   image?: string
 
   //service
-  service: ObjectId
+  service?: ObjectId
 
   // user
   user?: ObjectId
 
   // Appointment details
+  date: Date
   startTime: Date
   endTime: Date
   note?: string // Additional note about the appointment
 
   // Status management
   status: AppointmentStatusRequest // Appointment status
+
+  //Price
+  totalPrice: number
 
   // Timestamps (optional)
   createdAt?: Date // Optional creation timestamp
@@ -39,15 +43,19 @@ export default class RequestAppointment {
   image?: string
 
   //service
-  service: ObjectId
+  service?: ObjectId
 
   // user
   user?: ObjectId
 
   // Appointment details
+  date: Date
   startTime: Date
   endTime: Date
   note?: string // Additional note about the appointment
+
+  //Price
+  totalPrice: number
 
   // Status management
   status: AppointmentStatusRequest // Appointment status
@@ -71,11 +79,12 @@ export default class RequestAppointment {
     //service
     this.service = appointment.service
 
-
     // Appointment details
     this.startTime = appointment.startTime
     this.endTime = appointment.endTime
 
+    this.date = appointment.date
+    this.totalPrice = appointment.totalPrice
     this.note = appointment.note
 
     // Status management

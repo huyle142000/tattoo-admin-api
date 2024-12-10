@@ -19,7 +19,8 @@ import {
   getSessionAppointmentByIDController,
   postSessionAppointmentController,
   patchSessionAppointmentController,
-  deleteSessionAppointmentByIDController
+  deleteSessionAppointmentByIDController,
+  getRequestAppointmentsCalendarController
 } from '~/controllers/appointment/appointments.controllers'
 import {
   checkPostAppointmentRequestsValidator,
@@ -39,6 +40,13 @@ appointmentsRouter.get(
   checkAdminAccessTokenValidator,
   wrapRequestHandler(getRequestAppointmentsController)
 )
+
+appointmentsRouter.get(
+  '/request-appointments/calendar',
+  checkAdminAccessTokenValidator,
+  wrapRequestHandler(getRequestAppointmentsCalendarController)
+)
+
 appointmentsRouter.get(
   '/request-appointments/:id',
   checkExistentUserValidator,

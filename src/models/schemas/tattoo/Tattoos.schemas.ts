@@ -19,7 +19,7 @@ interface TattooType {
   artist?: ObjectId[] | undefined // Artist name (optional)
 
   // Get completed image of cliens
-  client?: ObjectId[] // Artist name (optional)
+  customer?: ObjectId[] // Artist name (optional)
   isActive?: boolean // Flag for availability (active or inactive)
 
   // Relationships (optional for future expansion)
@@ -47,7 +47,7 @@ export default class Tattoo {
   size: TattooSize // small, medium, large
   bodyPart: ObjectId // Body part for placement (e.g., arm, leg, back)
   artist?: ObjectId[] | undefined // Artist name (optional)
-  client?: ObjectId[] // Artist name (optional)
+  customer?: ObjectId[] // Artist name (optional)
 
   isActive?: boolean // Flag for availability (active or inactive)
 
@@ -74,7 +74,7 @@ export default class Tattoo {
     this.size = tattoo.size
     this.bodyPart = tattoo.bodyPart
     this.artist = tattoo.artist
-    this.client = tattoo.client
+    this.customer = tattoo.customer
 
     this.isActive = tattoo.isActive ?? true // Default to active
 
