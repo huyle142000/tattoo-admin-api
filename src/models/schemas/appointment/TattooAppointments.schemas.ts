@@ -4,27 +4,31 @@ import { AppointmentStatus } from '~/constant/enums'
 interface TattooAppointmentType {
   _id?: ObjectId // Optional ObjectId for MongoDB integration
 
+  email: string
+  phoneNumber: number
+  startTime: string
+  endTime: string
+  isAllDay: boolean
+  date: string
+
   // consultant
   executor?: ObjectId
 
   // Client information
-  client: ObjectId // Reference to the client's document
+  customerId?: ObjectId // Reference to the customerId's document
 
   // Tattoo information
-  tattoo: ObjectId // Reference to the tattoo's document
+  tattooId: ObjectId // Reference to the tattooId's document
 
   // Appointment details
-  artist: ObjectId // Reference to the artist's document
+  artistId: ObjectId // Reference to the artistId's document
   note?: string // Additional note about the appointment
 
   // Status management
   status: AppointmentStatus // Appointment status
 
   // Service
-  service: string
-
-  // Time to do (ARRAY)
-  session?: ObjectId[]
+  service?: string
 
   // Timestamps (optional)
   createdAt?: Date // Optional creation timestamp
@@ -38,23 +42,24 @@ export default class TattooAppointment {
   executor?: ObjectId
 
   // Client information
-  client: ObjectId // Reference to the client's document
+  customerId?: ObjectId // Reference to the customerId's document
 
   // Tattoo information
-  tattoo: ObjectId // Reference to the tattoo's document
+  tattooId: ObjectId // Reference to the tattooId's document
 
   // Appointment details
-  artist: ObjectId // Reference to the artist's document
+  artistId: ObjectId // Reference to the artistId's document
   note?: string // Additional note about the appointment
 
   // Status management
   status: AppointmentStatus // Appointment status
 
-  // Service
-  service: string
-
-  // Time to do (ARRAY)
-  session?: ObjectId[]
+  email: string
+  phoneNumber: number
+  startTime: string
+  endTime: string
+  isAllDay: boolean
+  date: string
 
   // Timestamps (optional)
   createdAt?: Date // Optional creation timestamp
@@ -63,28 +68,28 @@ export default class TattooAppointment {
   constructor(appointment: TattooAppointmentType) {
     this._id = appointment._id // Optional ObjectId assignment
 
-    // consultant or artist
+    // consultant or artistId
     this.executor = appointment?.executor
 
     // Client information
-    this.client = appointment.client
+    this.customerId = appointment.customerId
 
     // Tattoo information
-    this.tattoo = appointment.tattoo
+    this.tattooId = appointment.tattooId
 
     // Appointment details
-    this.artist = appointment.artist
+    this.artistId = appointment.artistId
     this.note = appointment.note
 
     // Status management
     this.status = appointment.status
 
-    // Time to do (ARRAY)
-    this.session = appointment.session
-
-    // Service
-    this.service = appointment.service
-
+    this.email = appointment?.email
+    this.phoneNumber = appointment?.phoneNumber
+    this.startTime = appointment?.startTime
+    this.endTime = appointment?.endTime
+    this.isAllDay = appointment?.isAllDay
+    this.date = appointment?.date
     // Timestamps (optional)
     this.createdAt = appointment.createdAt || new Date()
     this.updatedAt = appointment.updatedAt || new Date()

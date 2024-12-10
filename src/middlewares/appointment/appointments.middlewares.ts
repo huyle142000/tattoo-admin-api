@@ -23,31 +23,54 @@ export const checkPostAppointmentRequestsValidator = validate(
       },
       phoneNumber: {
         exists: {
-          errorMessage: COMMON_MESSAGE.PHONENUMBER_IS_REQUIRED
+          errorMessage: COMMON_MESSAGE.PHONE_NUMBER_IS_REQUIRED
         }
       },
-      tattoo: {
+      tattooId: {
+        optional: true,
         exists: {
           errorMessage: TATTOO_APPOINTMENT_MESSAGE.TATTOOID_INVALID
         },
-        custom: checkExistentFieldValidator(COMMON_MESSAGE.INEXISTENT_TATTOO, [databaseService.tattoos])
+        custom: {
+          options: async (value) => {
+            if (value) {
+              return checkExistentFieldValidator(COMMON_MESSAGE.INEXISTENT_TATTOO, [databaseService.tattoos])
+            }
+            return true // Passes validation if `value` is falsy or tattoo exists
+          }
+        }
       },
-      artist: {
+      customerId: {
+        optional: true,
+        exists: {
+          errorMessage: TATTOO_APPOINTMENT_MESSAGE.ARTISTID_INVALID
+        },
+        custom: {
+          options: async (value) => {
+            if (value) {
+              return checkExistentFieldValidator(COMMON_MESSAGE.INEXISTENT_CUSTOMER, [databaseService.users])
+            }
+            return true // Passes validation if `value` is falsy or tattoo exists
+          }
+        }
+      },
+
+      artistId: {
         exists: {
           errorMessage: TATTOO_APPOINTMENT_MESSAGE.ARTISTID_INVALID
         },
         custom: checkExistentFieldValidator(COMMON_MESSAGE.INEXISTENT_ARTIST, [databaseService.users])
       },
-      service: {
-        exists: {
-          errorMessage: TATTOO_APPOINTMENT_MESSAGE.SERVICE_IS_REQUIRED
-        },
-        custom: checkExistentFieldValidator(TATTOO_APPOINTMENT_MESSAGE.SERVICE_IS_INEXISTENT, [
-          databaseService.services
-        ])
-      },
+      // service: {
+      //   exists: {
+      //     errorMessage: TATTOO_APPOINTMENT_MESSAGE.SERVICE_IS_REQUIRED
+      //   },
+      //   custom: checkExistentFieldValidator(TATTOO_APPOINTMENT_MESSAGE.SERVICE_IS_INEXISTENT, [
+      //     databaseService.services
+      //   ])
+      // },
       startTime: {
-        isDate: {
+        isISO8601: {
           errorMessage: TATTOO_APPOINTMENT_MESSAGE.STARTTIME_INVALID
         },
         custom: {
@@ -68,10 +91,10 @@ export const checkPostAppointmentRequestsValidator = validate(
                   ]
                 },
                 {
-                  artist: { $ne: req?.body?.artist } // Exclude current session
+                  artist: { $ne: req?.body?.artistId }
                 },
                 {
-                  appointment: { $ne: req?.body?.appointment } // Exclude current session
+                  appointment: { $ne: req?.body?.appointment }
                 }
               ]
             })
@@ -80,20 +103,25 @@ export const checkPostAppointmentRequestsValidator = validate(
         }
       },
       endTime: {
-        isDate: {
+        isISO8601: {
           errorMessage: TATTOO_APPOINTMENT_MESSAGE.ENDTIME_INVALID
         }
+      },
+      isAllDay: {
+        optional: true,
+        isBoolean: true,
+        default: false
       },
       note: {
         optional: true,
         isString: {
-          errorMessage: TATTOO_APPOINTMENT_MESSAGE.DESCRIPTION_STRING // Assuming 'note' is for description
+          errorMessage: TATTOO_APPOINTMENT_MESSAGE.DESCRIPTION_STRING
         }
       },
       status: {
         optional: true,
         isIn: {
-          options: Object.values(AppointmentStatus), // Assuming AppointmentStatus is an enum
+          options: Object.values(AppointmentStatus),
           errorMessage: TATTOO_APPOINTMENT_MESSAGE.STATUS_INVALID
         }
       }
@@ -111,10 +139,10 @@ export const checkPostConsultantAppointmentsValidator = validate(
         custom: checkExistentFieldValidator(COMMON_MESSAGE.INEXISTENT_TATTOO, [databaseService.tattoos])
       },
 
-      client: {
+      customer: {
         optional: true,
 
-        custom: checkExistentFieldValidator(TATTOO_APPOINTMENT_MESSAGE.CLIENT_IS_INEXISTENT, [databaseService.users])
+        custom: checkExistentFieldValidator(TATTOO_APPOINTMENT_MESSAGE.CUSTOMER_IS_INEXISTENT, [databaseService.users])
       },
       artist: {
         optional: true,
@@ -153,11 +181,11 @@ export const checkPostTattooAppointmentsValidator = validate(
         custom: checkExistentFieldValidator(COMMON_MESSAGE.INEXISTENT_TATTOO, [databaseService.tattoos])
       },
 
-      client: {
+      customer: {
         exists: {
-          errorMessage: TATTOO_APPOINTMENT_MESSAGE.CLIENT_IS_REQUIRED
+          errorMessage: TATTOO_APPOINTMENT_MESSAGE.CUSTOMER_IS_REQUIRED
         },
-        custom: checkExistentFieldValidator(TATTOO_APPOINTMENT_MESSAGE.CLIENT_IS_INEXISTENT, [databaseService.users])
+        custom: checkExistentFieldValidator(TATTOO_APPOINTMENT_MESSAGE.CUSTOMER_IS_INEXISTENT, [databaseService.users])
       },
       artist: {
         exists: {

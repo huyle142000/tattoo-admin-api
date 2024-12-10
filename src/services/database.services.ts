@@ -16,19 +16,20 @@ import TattooAppointment from '~/models/schemas/appointment/TattooAppointments.s
 dotenv.config()
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@tattoosever.sript8i.mongodb.net/?retryWrites=true&w=majority&appName=TattooSever`
 export class DatabaseService {
-  private client: MongoClient
+  private customer: MongoClient
   private db: Db
   constructor() {
-    this.client = new MongoClient(uri)
-    this.db = this.client.db(process.env.DB_NAME)
+    this.customer = new MongoClient(uri)
+    this.db = this.customer.db(process.env.DB_NAME)
   }
   async connect() {
     try {
       // Send a ping to confirm a successful connection
+      console.log(123123)
       await this.db.command({ ping: 1 })
       console.log('Pinged your deployment. You successfully connected to MongoDB!')
     } catch (err) {
-      // Ensures that the client will close when you finish/error
+      // Ensures that the customer will close when you finish/error
       console.log(err, 'err')
     }
   }

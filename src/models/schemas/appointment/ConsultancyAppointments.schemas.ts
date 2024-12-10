@@ -8,13 +8,13 @@ interface ConsultancyAppointmentType {
   executor?: ObjectId
 
   // Client information
-  client: ObjectId // Reference to the client's document
+  customer: ObjectId // Reference to the customer's document
 
   // Tattoo information
   tattoo: ObjectId // Reference to the tattoo's document
 
   //service
-  service: ObjectId
+  service?: ObjectId
 
   // Appointment details
   artist: ObjectId // Reference to the artist's document
@@ -38,13 +38,13 @@ export default class ConsultancyAppointment {
   executor?: ObjectId
 
   // Client information
-  client: ObjectId // Reference to the client's document
+  customer: ObjectId // Reference to the customer's document
 
   // Tattoo information
   tattoo: ObjectId // Reference to the tattoo's document
 
   //service
-  service: ObjectId
+  service?: ObjectId
 
   // Appointment details
   artist: ObjectId // Reference to the artist's document
@@ -67,7 +67,7 @@ export default class ConsultancyAppointment {
     this.executor = appointment?.executor
 
     // Client information
-    this.client = appointment.client
+    this.customer = appointment.customer
 
     // Tattoo information
     this.tattoo = appointment.tattoo

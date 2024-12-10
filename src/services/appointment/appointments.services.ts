@@ -10,8 +10,10 @@ import { ObjectId } from 'mongodb'
 import {
   ConsultancyAppointmentsQuery,
   ConsultancyAppointmentsRequest,
+  RequestAppointmentsCalendarRequest,
   RequestAppointmentsQuery,
   RequestAppointmentsRequest,
+  RequestTattooAppointmentsByIdQuery,
   SessionAppointmentsQuery,
   SessionAppointmentsRequest,
   TattooAppointmentsQuery,
@@ -24,6 +26,20 @@ import SessionAppointment from '~/models/schemas/appointment/SessionAppointments
 import { createNodeCron } from '~/utils/common'
 import flatted from 'flatted'
 import cron from 'node-cron'
+import {
+  addDays,
+  addMinutes,
+  endOfDay,
+  endOfMonth,
+  endOfWeek,
+  format,
+  isWithinInterval,
+  parseISO,
+  startOfDay,
+  startOfMonth,
+  startOfWeek
+} from 'date-fns'
+import { IAppointmentCalendar, IAppointmentCalendarHour } from '~/interface'
 
 class RequestAppointmentServices {
   async postRequestAppointments(payload: RequestAppointmentsRequest) {
@@ -43,6 +59,39 @@ class RequestAppointmentServices {
     const result = await query.toArray()
 
     return result
+  }
+
+  async getRequestAppointmentsCalendar(
+    filters?: Partial<RequestAppointmentsCalendarRequest>
+  ): Promise<IAppointmentCalendar[]> {
+    const month = filters?.month
+    const currentYear = new Date().getFullYear()
+
+    const start = new Date(`${currentYear}-${String(month).padStart(2, '0')}-01`)
+    const end = endOfMonth(start)
+
+    const appointments = await databaseService.requestAppointments
+      .find({
+        date: { $gte: start, $lte: end }
+      })
+      .toArray()
+
+    const daysInMonth = []
+    for (let day = new Date(start); day <= end; day.setDate(day.getDate() + 1)) {
+      const formattedDate = format(day, 'yyyy-MM-dd')
+
+      const dayAppointments = appointments.filter(
+        (appointment) => format(new Date(appointment.date), 'yyyy-MM-dd') === formattedDate
+      )
+
+      daysInMonth.push({
+        date: formattedDate,
+        appointments: dayAppointments,
+        isBooked: dayAppointments.length > 0
+      })
+    }
+
+    return daysInMonth
   }
 
   async updateRequestAppointment(id: string, payload: RequestAppointmentsRequest) {
@@ -84,7 +133,7 @@ class RequestAppointmentServices {
 
         break
       case UserRoles.Client:
-        extraFindObj.client = payload.user_id
+        extraFindObj.customer = payload.user_id
 
         break
 
@@ -154,7 +203,7 @@ class RequestAppointmentServices {
 
         break
       case UserRoles.Client:
-        extraFindObj.client = payload.user_id
+        extraFindObj.customer = payload.user_id
 
         break
 
@@ -170,7 +219,80 @@ class RequestAppointmentServices {
     return result
   }
 
+  async getTattooAppointmentsByIdHour({
+    filters,
+    payload
+  }: {
+    filters?: Partial<RequestTattooAppointmentsByIdQuery>
+    payload?: {
+      user_id?: string
+      role?: UserRoles
+    }
+  }): Promise<IAppointmentCalendarHour[]> {
+    const extraFindObj: any = {}
+    switch (payload?.role) {
+      case UserRoles.Artist:
+        extraFindObj.artistId = payload.user_id
+        break
+      case UserRoles.Client:
+        extraFindObj.customerId = payload.user_id
+        break
+      default:
+        break
+    }
+
+    const query = filters
+      ? databaseService.tattooAppointments.find({ filters, ...extraFindObj })
+      : databaseService.tattooAppointments.find({ ...extraFindObj })
+    const appointments = await query.toArray()
+
+    const result: {
+      date: string
+      timeSlots: { time: string; isBooked: boolean; appointment?: TattooAppointment }[]
+    }[] = []
+
+    const startDay = parseISO(filters?.date as string)
+    for (let i = 0; i < 7; i++) {
+      const currentDate = addDays(startDay, i)
+      const startTime = startOfDay(currentDate)
+      const endTime = endOfDay(currentDate)
+
+      const timeSlots: { time: string; start: Date; end: Date }[] = []
+      let currentTime = startTime
+
+      while (currentTime <= endTime) {
+        const nextTime = addMinutes(currentTime, 30)
+        timeSlots.push({
+          time: format(currentTime, 'HH:mm'),
+          start: currentTime,
+          end: nextTime
+        })
+        currentTime = nextTime
+      }
+
+      const dailyTimeSlots = timeSlots.map((slot) => {
+        const appointment = appointments.find((appt) =>
+          isWithinInterval(parseISO(appt.date), { start: slot.start, end: slot.end })
+        )
+
+        return {
+          time: slot.time,
+          isBooked: Boolean(appointment),
+          ...(appointment ? { appointment } : {})
+        }
+      })
+
+      result.push({
+        date: format(currentDate, 'yyyy-MM-dd'),
+        timeSlots: dailyTimeSlots
+      })
+    }
+
+    return result
+  }
+
   async postTattooAppointments(payload: TattooAppointmentsRequest, executor?: ObjectId) {
+    console.log(payload, 'payload')
     await databaseService.tattooAppointments.insertOne(
       new TattooAppointment({
         ...payload,
@@ -224,7 +346,7 @@ class RequestAppointmentServices {
 
         break
       case UserRoles.Client:
-        extraFindObj.client = payload.user_id
+        extraFindObj.customer = payload.user_id
 
         break
 

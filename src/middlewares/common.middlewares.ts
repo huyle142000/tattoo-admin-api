@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { checkSchema, CustomValidator, ParamSchema } from 'express-validator'
+import { checkSchema, ParamSchema } from 'express-validator'
 import { ValidatorSchemaOptions } from 'express-validator/lib/middlewares/schema'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import { capitalize, pick } from 'lodash'
@@ -45,7 +45,7 @@ export const checkAdminAccessTokenValidator = validate(
       custom: {
         options: async (value: string, { req }) => {
           const access_token = (value || '')?.split('Bearer ')[1]
-          console.log(access_token,"access_token")
+          console.log(access_token, 'access_token')
           if (!access_token) {
             throw new ErrorWithStatus({
               message: USER_MESSAGE.ACCESS_TOKEN_IS_REQUIRED,
@@ -58,7 +58,7 @@ export const checkAdminAccessTokenValidator = validate(
               token: access_token,
               secretOrPublicKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
             })
-
+            console.log(decode_authorization, 'decode_authorization')
             if (decode_authorization?.role != UserRoles.Admin) {
               throw new ErrorWithStatus({
                 message: USER_MESSAGE.USER_IS_NOT_ALLOWED,
@@ -94,6 +94,7 @@ export const checkExistentUserValidator = validate(
       custom: {
         options: async (value: string, { req }) => {
           const access_token = (value || '')?.split('Bearer ')[1]
+          console.log(access_token, 'access_token')
           if (!access_token) {
             throw new ErrorWithStatus({
               message: USER_MESSAGE.ACCESS_TOKEN_IS_REQUIRED,

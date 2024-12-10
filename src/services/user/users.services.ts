@@ -376,6 +376,7 @@ class UsersService {
   }
   async getUsers() {
     const user = await databaseService.users.find({}).toArray()
+    console.log(user, 'user')
     return user
   }
 

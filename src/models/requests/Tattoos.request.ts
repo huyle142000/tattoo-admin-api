@@ -9,7 +9,7 @@ export interface TattoosQueryRequest {
   size?: TattooSize
   bodyPart?: ObjectId
   artist?: ObjectId[]
-  client?: ObjectId[]
+  customer?: ObjectId[]
   category?: ObjectId
 }
 
@@ -28,7 +28,7 @@ export interface PostTattoosRequest {
   size: TattooSize // small, medium, large
   bodyPart: ObjectId // Body part for placement (e.g., arm, leg, back)
   artist?: ObjectId[]
-  client?: ObjectId[]
+  customer?: ObjectId[]
   isActive?: boolean // Flag for availability (active or inactive)
 
   // Relationships (optional for future expansion)

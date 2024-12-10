@@ -6,11 +6,11 @@ export const COMMON_MESSAGE = {
   DELETE_SUCCESSFULLY: 'DELETE SUCCESSFULLY!',
   NAME_IS_REQUIRED: 'Name is required',
   EMAIL_IS_REQUIRED: 'Email is required',
-  PHONENUMBER_IS_REQUIRED: 'Phone number is required',
+  PHONE_NUMBER_IS_REQUIRED: 'Phone number is required',
 
   NAME_DUPLICATE: 'This name is already in use in both Vietnamese and English.',
   INEXISTENT_TATTOO: 'Tattoo  is inexistent',
-  INEXISTENT_CLIENT: 'Client  is inexistent',
+  INEXISTENT_CUSTOMER: 'Client  is inexistent',
   INEXISTENT_ARTIST: 'Artist  is inexistent',
   INEXISTENT_CATEGORY: 'Artist  is inexistent',
   INEXISTENT_BODYPART: 'Body part is inexistent'
@@ -124,8 +124,8 @@ export const TATTOO_APPOINTMENT_MESSAGE = {
   SERVICE_IS_REQUIRED: 'Service is required.',
   SERVICE_IS_INEXISTENT: 'Service is inexistent.',
 
-  CLIENT_IS_INEXISTENT: 'Client is inexistent.',
-  CLIENT_IS_REQUIRED: 'Client is required.',
+  CUSTOMER_IS_INEXISTENT: 'Client is inexistent.',
+  CUSTOMER_IS_REQUIRED: 'Client is required.',
 
   EXECUTOR_IS_INEXISTENT: 'Executor is inexistent.',
   EXECUTOR_IS_REQUIRED: 'Executor is required.',

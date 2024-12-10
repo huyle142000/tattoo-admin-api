@@ -7,8 +7,8 @@ const OAuth2 = google.auth.OAuth2
 export const createTransporter = async () => {
   console.log(132412341234)
   const oauth2Client = new OAuth2(
-    process.env.CLIENT_ID,
-    process.env.CLIENT_SECRET,
+    process.env.CUSTOMER_ID,
+    process.env.CUSTOMER_SECRET,
     'https://developers.google.com/oauthplayground'
   )
 
@@ -33,8 +33,8 @@ export const createTransporter = async () => {
       type: 'OAuth2',
       user: process.env.EMAIL,
       accessToken,
-      clientId: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
+      customerId: process.env.CUSTOMER_ID,
+      customerSecret: process.env.CUSTOMER_SECRET
     }
   })
 

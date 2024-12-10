@@ -10,12 +10,18 @@ export interface RequestAppointmentsRequest {
   phoneNumber: number
   email: string
   image?: string
-  service: ObjectId
+  service?: ObjectId
 
   // Appointment details
+  date: Date
+  totalPrice: number
   startTime: Date
   endTime: Date
   note?: string // Additional note about the appointment
+}
+
+export interface RequestAppointmentsCalendarRequest {
+  month: string
 }
 
 export interface RequestAppointmentsQuery {
@@ -40,13 +46,13 @@ export interface ConsultancyAppointmentsRequest {
   executor?: ObjectId
 
   // Client information
-  client: ObjectId // Reference to the client's document
+  customer: ObjectId // Reference to the customer's document
 
   // Tattoo information
   tattoo: ObjectId // Reference to the tattoo's document
 
   // executor
-  service: ObjectId
+  service?: ObjectId
 
   // Appointment details
   artist: ObjectId // Reference to the artist's document
@@ -66,7 +72,7 @@ export interface ConsultancyAppointmentsQuery {
   user?: ObjectId
 
   // Client information
-  client: ObjectId // Reference to the client's document
+  customer: ObjectId // Reference to the customer's document
 
   // Appointment details
   artist: ObjectId // Reference to the artist's document
@@ -82,27 +88,34 @@ export interface ConsultancyAppointmentsQuery {
 export interface TattooAppointmentsRequest {
   _id?: ObjectId // Optional ObjectId for MongoDB integration
 
+  email: string
+  phoneNumber: number
+  startTime: string
+  endTime: string
+  isAllDay: boolean
+  date: string
   // consultant
-  executor: ObjectId
+  executor?: ObjectId
 
   // Client information
-  client: ObjectId // Reference to the client's document
+  customerId?: ObjectId // Reference to the customerId's document
 
   // Tattoo information
-  tattoo: ObjectId // Reference to the tattoo's document
+  tattooId: ObjectId // Reference to the tattooId's document
 
   // Appointment details
-  artist: ObjectId // Reference to the artist's document
+  artistId: ObjectId // Reference to the artistId's document
   note?: string // Additional note about the appointment
 
   // Status management
   status: AppointmentStatus // Appointment status
 
   // Service
-  service: string
+  service?: string
 
-  // Time to do (ARRAY)
-  session?: any
+  // Timestamps (optional)
+  createdAt?: Date // Optional creation timestamp
+  updatedAt?: Date // Optional update timestamp
 }
 
 export interface TattooAppointmentsQuery {
@@ -112,7 +125,7 @@ export interface TattooAppointmentsQuery {
   executor?: ObjectId
 
   // Client information
-  client: ObjectId // Reference to the client's document
+  customer: ObjectId // Reference to the customer's document
 
   // Tattoo information
   tattoo: ObjectId // Reference to the tattoo's document
@@ -161,4 +174,15 @@ export interface SessionAppointmentsQuery {
   // Appointment details
   startTime: Date
   endTime: Date
+}
+
+export interface RequestTattooAppointmentsByIdQuery {
+  _id?: ObjectId // Optional ObjectId for MongoDB integration
+
+  // Appointment information
+  customerId?: string
+  artist?: ObjectId
+  service?: string
+  // Appointment details
+  date: Date | string
 }
