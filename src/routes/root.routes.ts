@@ -6,6 +6,7 @@ import serviceRouter from './service.routes'
 import unitRouter from './unit.routes'
 import appointmentsRouter from './appointment.routes'
 import bodyPartRouter from './bodyPart.routes'
+import inventoryRouter from './inventory.routes'
 
 export default function rootRoutes(app: Application) {
   app.use('/users', usersRouter)
@@ -24,6 +25,8 @@ export default function rootRoutes(app: Application) {
 
   // appointment
   app.use('', appointmentsRouter)
+
+  app.use('', inventoryRouter)
 
   // Error pot
   app.use(defaultErrorHandler)

@@ -1,28 +1,27 @@
 import { ObjectId } from 'mongodb'
-import { Languages } from '~/constant/common'
 
-interface InventoryCategoryType {
+interface InventoryCtgsType {
   _id?: ObjectId // Optional ObjectId for MongoDB integration
 
   // Category details
-  name: Languages // Multilingual category name
-  description: Languages // Optional multilingual description
+  name: string // Multilingual category name
+  description: string // Optional multilingual description
 
   // Timestamps (optional)
   createdAt?: Date // Optional creation timestamp
   updatedAt?: Date // Optional update timestamp
 }
 
-export default class InventoryCategory {
+export default class InventoryCtgs {
   _id?: ObjectId // Optional ObjectId for MongoDB integration
 
-  name: Languages // Multilingual category name
-  description: Languages // Optional multilingual description
+  name: string // Multilingual category name
+  description: string // Optional multilingual description
 
   // Timestamps (optional)
   createdAt?: Date // Optional creation timestamp
   updatedAt?: Date // Optional update timestamp
-  constructor(category: InventoryCategoryType) {
+  constructor(category: InventoryCtgsType) {
     this._id = category._id // Optional ObjectId assignment
 
     // Category details
