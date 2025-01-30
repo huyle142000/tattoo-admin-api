@@ -12,6 +12,8 @@ import RequestAppointment from '~/models/schemas/appointment/RequestAppointments
 import SessionAppointment from '~/models/schemas/appointment/SessionAppointments.schemas'
 import ConsultancyAppointment from '~/models/schemas/appointment/ConsultancyAppointments.schemas'
 import TattooAppointment from '~/models/schemas/appointment/TattooAppointments.schemas'
+import Inventories from '~/models/schemas/inventory/Inventories.schemas'
+import InventoryCtgs from '~/models/schemas/inventory/ItemInventoryCategories'
 
 dotenv.config()
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@tattoosever.sript8i.mongodb.net/?retryWrites=true&w=majority&appName=TattooSever`
@@ -64,6 +66,14 @@ export class DatabaseService {
 
   get tattoos(): Collection<Tattoo> {
     return this.db.collection(process.env.DB_TATTOO_COLLECTION as string)
+  }
+
+  get inventories(): Collection<Inventories> {
+    return this.db.collection(process.env.DB_INVENTORY_COLLECTION as string)
+  }
+
+  get inventoryCtgs(): Collection<InventoryCtgs> {
+    return this.db.collection(process.env.DB_INVENTORY_COLLECTION as string)
   }
 
   get videostatus(): Collection<VideoStatus> {
